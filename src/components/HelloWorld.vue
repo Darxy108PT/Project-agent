@@ -1,7 +1,7 @@
 <script setup lang="js">
   import Groq from "groq-sdk";
   import { ref, computed } from 'vue';
-  import { marked } from "marked"
+  import MarkdownIt from 'markdown-it'
 
   const GROQ_API_KEY= "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"
 
@@ -29,14 +29,21 @@
       messages: [
         {
           role: "user",
-          content: "explica a teoria da relatividade de forma simples",
+          content: "Cria tabelas em markdown com 3 colunas: Nome, Idade, Cidade. Adiciona 5 linhas com dados fictícios.",
         },
       ],
       model: "openai/gpt-oss-20b",
     });
   }
 
-  const htmlResposta = computed(() => marked(mensagem.value || ''))
+  const htmlResposta = computed(() => md.render(mensagem.value || ''))
+
+  const md = new MarkdownIt({
+    html: false,
+    linkify: true,
+    typographer: true
+  })
+
 
 </script>
 
@@ -48,7 +55,7 @@
     
     <div v-if="mensagem" style="margin-top: 20px; padding: 10px; border: 1px solid #ccc; border-radius: 5px;margin-left: 100px;margin-right: 100px;">
       <h3>Resposta:</h3>
-      <p v-html="htmlResposta"></p>
+      <div v-html="htmlResposta"></div> <!-- precisa de class para formatar as tabelas -->
     </div>
   </div>
 </template>
@@ -58,9 +65,13 @@ button {
   padding: 10px 20px;
   font-size: 16px;
   cursor: pointer;
+  color: #ffffff;
 }
 button:hover {
-  background-color: #f0f0f0;
+  background-color: #343434;
+}
+div {
+  color: #ffffff;
 }
 
 </style>
