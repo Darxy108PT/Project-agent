@@ -1,35 +1,44 @@
 <script setup lang="ts">
-import { ArrowUpIcon, PlusIcon } from 'lucide-vue-next'
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
+import { ArrowUpIcon } from 'lucide-vue-next'
+//import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
 import { InputGroup, InputGroupAddon, InputGroupButton, InputGroupText, InputGroupTextarea } from '@/components/ui/input-group'
-//import { Separator } from '@/components/ui/separator'
+import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { reactive, watch, ref } from 'vue'
 
 const props = defineProps<{
   main: (prompt: string) => void
   loading: boolean
   prompt: string
+  model: string
 }>()
 
 const data = reactive({
   main: props.main,
   loading: props.loading,
   prompt: props.prompt,
+  model: props.model,
 })
+
+const emit = defineEmits(['update:model'])
+
 
 let isDisabled = ref(true)
-
+let model = ref('smart')
 
 watch(() => props.loading, v => {data.loading = v})
+watch(() => props.main, v => data.main = v)
+watch(() => props.prompt, v => {data.prompt = v, enableButton()})
+watch(model, (value) => {
+  const mapped =
+    value === "smart"
+      ? "openai/gpt-oss-120b"
+      : "openai/gpt-oss-20b"
 
-watch(() => props.prompt, v => {
-  data.prompt = v
-  enableButton()
+  data.model = mapped
+  emit('update:model', mapped)
 })
 
-watch(() => props.main, v => data.main = v)
-
-function verifyKey(event: KeyboardEvent) {
+function checkKey(event: KeyboardEvent) {
   if (event.key === "Enter") {
     if (event.shiftKey) {
       return
@@ -50,40 +59,27 @@ function enableButton() {
 
 <template>
 <div class="fixed bottom-0 left-0 w-full bg-neutral-900 pb-8 pl-8 h-[180px]">
-  <InputGroup class="fixed bottom-5 w-full max-w-3xl bg-zinc-800 text-white p-4 max-h-[150px] overflow-y-auto left-1/2 -translate-x-1/2 rounded-4xl">
+  <InputGroup class="fixed bottom-5 w-full max-w-3xl bg-zinc-800 text-white p-4 max-h-[160px] overflow-y-auto left-1/2 -translate-x-1/2 rounded-xl">
       <InputGroupTextarea
+        placeholder="Ask, Search or Chat..."
         v-model="data.prompt"
         @update:modelValue="enableButton"
-        @keydown="verifyKey"
+        @keydown="checkKey"
       />
       <InputGroupAddon align="block-end">
-        <InputGroupButton
-          variant="outline"
-          class="rounded-full"
-          size="icon-xs"
-        >
-          <PlusIcon class="size-4" />
-        </InputGroupButton>
-        <DropdownMenu>
-          <DropdownMenuTrigger as-child>
-            <InputGroupButton variant="ghost">
-              Auto
-            </InputGroupButton>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent
-            side="top"
-            align="start"
-            class="[--radius:0.95rem]"
-          >
-            <DropdownMenuItem>Auto</DropdownMenuItem>
-            <DropdownMenuItem>Agent</DropdownMenuItem>
-            <DropdownMenuItem>Manual</DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
+        <Select v-model="model" align="start" side="top">
+          <SelectTrigger class="w-[100px] rounded-full">
+            <SelectValue :placeholder="`${model === 'smart' ? 'Smart' : 'Fast'}`" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectGroup>
+              <SelectItem value="smart">Smart</SelectItem>
+              <SelectItem value="fast">Fast</SelectItem>
+            </SelectGroup>
+          </SelectContent>
+        </Select>
         <InputGroupText class="ml-auto">
-          <!--52% used-->
         </InputGroupText>
-        <!--<Separator orientation="vertical" class="!h-4" />-->
         <InputGroupButton
           variant="default"
           class="rounded-full"

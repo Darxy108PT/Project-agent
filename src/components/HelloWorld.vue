@@ -10,6 +10,7 @@
   
   const message = ref('');
   const loading = ref(false)
+  const model = ref('openai/gpt-oss-120b')
   const prompt = ref('')
 
   async function main(prompt: string) {
@@ -20,7 +21,7 @@
       console.log(message.value);
     } catch (error) {
       console.error('Erro:', error);
-      message.value = 'Erro ao obter resposta do Groq';
+      message.value = 'Error obtaining Groq\'s answer';
     } finally {
       loading.value = false;
     }
@@ -34,11 +35,11 @@
           content: prompt,
         },
       ],
-      model: "openai/gpt-oss-20b",
+      model: model.value,
     });
   }
 
-  const htmlResposta = computed(() => md.render(mensagem.value || ''))
+  const htmlResposta = computed(() => md.render(message.value || ''))
 
   const md = new MarkdownIt({
     html: false,
@@ -48,29 +49,21 @@
 </script>
 
 <template>
-<div class="flex justify-center items-center">
-  <div class="bg-neutral-900 pb-8 pr-8 pl-8 max-h-[90%] max-w-4xl">
+<div class="flex justify-center items-center pb-[200px]">
+  <div class="bg-neutral-900 pb-8 pr-8 pl-8 max-w-4xl">
     <a class="text-white font-bold"> {{ loading ? 'Loading...' : '' }} </a>
-
     <div v-if="message" class="mt-5 p-2.5 border border-gray-300 rounded-md">
       <h3 class="text-white font-bold">Answer:</h3>
-      <p class="text-white font-semibold">{{ htmlResposta }}</p>
+      <div class="text-white font-semibold" v-html="htmlResposta"></div>
+    </div>
   </div>
 </div>
 
-<Index :main="main" :loading="loading" :prompt="prompt"/>
+<Index v-model:model="model" :main="main" :loading="loading" :prompt="prompt" />
+
 </template>
 
 <style scoped>
-button {
-  padding: 10px 20px;
-  font-size: 16px;
-  cursor: pointer;
-  color: #ffffff;
-}
-button:hover {
-  background-color: #343434;
-}
 div {
   color: #ffffff;
 }

@@ -11,6 +11,7 @@
   "dependencies": {
     "@ai-sdk/groq": "^3.0.15",
     "@tailwindcss/vite": "^4.1.18",
+    "@types/markdown-it": "^14.1.2",
     "@vueuse/core": "^14.1.0",
     "ai": "^6.0.50",
     "class-variance-authority": "^0.7.1",
