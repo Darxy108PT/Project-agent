@@ -7,8 +7,8 @@ import { reactive, watch, ref } from 'vue'
 
 const props = defineProps<{
   main: (prompt: string) => void
-  loading: boolean
-  prompt: string
+  loading: any
+  prompt: any
 }>()
 
 const data = reactive({
