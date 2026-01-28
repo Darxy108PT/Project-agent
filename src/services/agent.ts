@@ -27,9 +27,11 @@ export class AgentService {
             this.message.value = chatCompletion.choices[0]?.message?.content || "";
             console.log(this.message.value);
               console.log(this);
+              console.log("---------------------------------------------------------");
+              console.log(chatCompletion.choices);
         } catch (error) {
-            console.error('Erro:', error);
-            this.message.value = 'Erro ao obter resposta do Groq';
+            console.error('Error:', error);
+            this.message.value = 'Error obtaining response from Groq';
         } finally {
             this.loading.value = false;
         }
@@ -37,13 +39,8 @@ export class AgentService {
 
     getGroqChatCompletion = async (prompt: string) => {
         return this.groq.chat.completions.create({
-            messages: [
-                {
-                    role: "user",
-                    content: prompt,
-                },
-            ],
-            model: this.Model,
+            messages: this.prompt.value,
+            model: this.Model || "openai/gpt-oss-120b",
         });
     }
 }
