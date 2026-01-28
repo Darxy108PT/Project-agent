@@ -10,6 +10,7 @@ export class AgentService {
     htmlAnswer: any;
     groq: any;
     markdown2HtmlService: any;
+    Model: any;
 
     constructor(APIkey: string) {
         this.APIkey = APIkey;
@@ -26,6 +27,8 @@ export class AgentService {
             this.message.value = chatCompletion.choices[0]?.message?.content || "";
             console.log(this.message.value);
               console.log(this);
+              console.log("---------------------------------------------------------");
+              console.log(chatCompletion.choices);
         } catch (error) {
             console.error('Error:', error);
             this.message.value = 'Error obtaining Groq\'s Answer';
@@ -36,13 +39,8 @@ export class AgentService {
 
     getGroqChatCompletion = async (prompt: string) => {
         return this.groq.chat.completions.create({
-            messages: [
-                {
-                    role: "user",
-                    content: prompt,
-                },
-            ],
-            model: "openai/gpt-oss-120b",
+            messages: this.prompt.value,
+            model: this.Model || "openai/gpt-oss-120b",
         });
     }
 }
