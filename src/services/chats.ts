@@ -58,7 +58,7 @@ export class ChatService {
         localStorage.setItem(chatId, JSON.stringify(chat));
     }
 
-    getRecentMessages(chatId: string, limit = 8) {
+    getRecentMessages(chatId: string, limit = 4) {
         const chatData = localStorage.getItem(chatId);
         if (!chatData) return [];
         const chat = JSON.parse(chatData);
@@ -84,7 +84,11 @@ export class ChatService {
             });
         }
         if (chat.messages?.length) {
-            messages.push(...chat.messages.slice(-8));
+            messages.push(...chat.messages.slice(-4));
+            if (chat.messages.length > 4) {
+                chat.messages = chat.messages.slice(-4);
+                localStorage.setItem(chatId, JSON.stringify(chat));
+            }
         }
         messages.push({
             role: "user",

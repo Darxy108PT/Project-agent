@@ -1,10 +1,14 @@
 <script setup lang="ts">
   import Index from './Index.vue';
+  import KeyTemplate from './KeyTemplate.vue';
+  import ChatsHistory from './ChatsHistory.vue';
   import { AgentService } from '@/services/agent';
   import { Markdown2HtmlService } from '@/services/markdown2html';
   import { ChatService } from '@/services/chats';
+
+  const ApiKey = localStorage.getItem('API Key') || '';
   
-  const agentService = new AgentService("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");
+  const agentService = new AgentService(ApiKey);
 
   const markdown2HtmlService = new Markdown2HtmlService();
   const chatService = new ChatService('','');
@@ -17,12 +21,13 @@
     localStorage.setItem('currentChatId', currentChatId);
   }
 
-  function Chat(message: string){
+  async function Chat(message: string){
     if (!message.trim()) return;
     chatService.saveMessage(currentChatId!, 'user', message);
     const messages = chatService.buildPrompt(currentChatId!, message);
     agentService.prompt.value = messages;
-    agentService.main(message);
+    await agentService.main(message);
+    chatService.saveMessage(currentChatId!, 'assistant', agentService.message.value);
   }
 
 </script>
@@ -39,7 +44,7 @@
 </div>
 
 <Index v-model:model="agentService.Model" :main="Chat" :loading="agentService.loading" :prompt="prompt" />
-<KeyTemplate :apiKey="apiKey"/>
+<KeyTemplate :apiKey="agentService.APIkey"/>
 <ChatsHistory />
 
 </template>
