@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { ref } from 'vue';
 import Index from './Index.vue';
 import { AgentService } from '@/services/agent';
 import { Markdown2HtmlService } from '@/services/markdown2html';
@@ -45,11 +44,10 @@ import { ChatService } from '@/services/chats';
   </div>
 </div>
 
-  <ToDoApp>
-    <Index v-model:model="agentService.Model" :main="Chat" :loading="agentService.loading" :prompt="prompt" />
-    <KeyTemplate :apiKey="agentService.APIkey"/>
-    <ChatsHistory />
-  </ToDoApp>
+  <ToDoApp />
+  <Index v-model:model="agentService.Model" :main="Chat" :loading="agentService.loading" :prompt="prompt" />
+  <KeyTemplate :apiKey="agentService.APIkey"/>
+  <ChatsHistory />
 
 </template>
 
