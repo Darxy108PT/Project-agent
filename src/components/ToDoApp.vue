@@ -23,7 +23,7 @@ const sortedTasks = computed(() => {
 
 
 <template>
-  <div class="w-[900px] h-[70%] ml-auto mr-[30px] mt-[10px] relative right-[30px]">
+  <div class="w-[900px] h-[70%] ml-auto mr-auto mt-[10px] relative right-[30px]">
 
     <button
       aria-label="All"
@@ -107,7 +107,7 @@ const sortedTasks = computed(() => {
               <Button 
                 variant="outline"
                 @click="todoList.createTask('Task ' + Date.now(), 'Just a test', Math.floor(Math.random() * 5) + 1, new Date())"
-                class="bg-neutral-400 hover:bg-neutral-300 cursor-pointer text-[18px]">
+                class="bg-neutral-400 hover:bg-neutral-300 cursor-pointer text-[18px] text-black">
                 Create Task
               </Button>
 

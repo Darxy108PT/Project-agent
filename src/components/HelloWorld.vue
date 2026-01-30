@@ -44,10 +44,11 @@ import { ChatService } from '@/services/chats';
   </div>
 </div>
 
-  <ToDoApp />
-  <Index v-model:model="agentService.Model" :main="Chat" :loading="agentService.loading" :prompt="prompt" />
-  <KeyTemplate :apiKey="agentService.APIkey"/>
-  <ChatsHistory />
+  <ToDoApp>
+    <Index v-model:model="agentService.Model" :main="Chat" :loading="agentService.loading" :prompt="prompt" />
+    <KeyTemplate :apiKey="agentService.APIkey"/>
+    <ChatsHistory />
+  </ToDoApp>
 
 </template>
 
