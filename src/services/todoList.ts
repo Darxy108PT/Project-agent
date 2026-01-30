@@ -38,6 +38,7 @@ export class ToDoList {
 
     checkTask(task: Task) {
         this.updateTask(task, task.title, task.description, task.priorityLvl, true)
+        console.log("You completed the task: " + task.title)
     }
 
     createTask(title: string, description: string, priorityLvl: number, date: Date) {
@@ -48,11 +49,8 @@ export class ToDoList {
     }
 
     getProduct(id: number){
-        for (let task of this.tasks.keys()) {
-            if (task.id === id) {
-                return task
-            }
-        }
+        // Map keys are task IDs; values are Task objects. Return the Task value directly.
+        return this.tasks.get(id)
     }
 
     updateLocalStorage(taskMap: Map<number, Task>) {
