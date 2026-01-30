@@ -64,6 +64,7 @@ function enableButton() {
         v-model="data.prompt"
         @update:modelValue="enableButton"
         @keydown="checkKey"
+        autofocus
       />
       <InputGroupAddon align="block-end">
         <Select v-model="model" align="start" side="top">

@@ -118,3 +118,22 @@
     @apply bg-background text-foreground;
   }
 }
+
+@layer utilities {
+  .scrollbar-custom::-webkit-scrollbar {
+    width: 10px;
+  }
+
+  .scrollbar-custom::-webkit-scrollbar-track {
+    background: #2a2a2a;
+  }
+
+  .scrollbar-custom::-webkit-scrollbar-thumb {
+    background: #4b4b4b;
+    border-radius: 5px;
+  }
+
+  .scrollbar-custom::-webkit-scrollbar-thumb:hover {
+    background: #6b6b6b;
+  }
+}

@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import { Sidebar, SidebarContent, SidebarFooter, SidebarGroup, SidebarGroupContent, SidebarGroupLabel, SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem, SidebarProvider, SidebarRail ,SidebarTrigger } from '@/components/ui/sidebar'
+import { Sidebar, SidebarContent, SidebarFooter, SidebarGroup, SidebarGroupContent, SidebarGroupLabel, SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem, SidebarRail ,SidebarTrigger } from '@/components/ui/sidebar'
 import { GalleryVerticalEnd } from 'lucide-vue-next'; 
 </script>
 
 <template>
-<SidebarProvider>
+
   <Sidebar class="w-[260px] bg-[#202123] text-gray-200 border-r border-neutral-700">
 
     <!-- HEADER -->
@@ -49,7 +49,6 @@ import { GalleryVerticalEnd } from 'lucide-vue-next';
 
     <SidebarRail class="bg-[#202123]" />
   </Sidebar>
-</SidebarProvider>
 </template>
 
 <style scoped>
