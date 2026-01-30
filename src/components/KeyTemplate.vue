@@ -29,7 +29,7 @@ data.apiKey = localStorage.getItem('API Key') || ''
 <Sheet>
     <div class="fixed top-4 right-4">
       <SheetTrigger as-child>
-        <Button variant="outline" class="bg-neutral-400 hover:bg-neutral-300 cursor-pointer text-[18px]" >
+        <Button variant="outline" class="bg-neutral-400 hover:bg-neutral-300 cursor-pointer text-[18px] text-black" >
             Open API Key Menu
         </Button>
       </SheetTrigger>

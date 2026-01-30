@@ -70,6 +70,10 @@ export class ToDoList {
             tasksList.value.push(task)
         })
     }
+
+    get tasksArray() {
+        return Array.from(this.tasks.values())
+    }
 }
 
 export const todoList = reactive(new ToDoList())

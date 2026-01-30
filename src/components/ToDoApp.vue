@@ -1,29 +1,47 @@
 <script setup lang="ts">
-import { tasksList } from '@/services/task';
+
 import { todoList } from '@/services/todoList';
 import { Button } from '@/components/ui/button'
-import { computed, ref } from 'vue'
+import { computed, ref, watch } from 'vue'
 
-const activeTab = ref('all')
+const activeTab = ref(localStorage.getItem("activeTab") || "all")
+const search = ref(localStorage.getItem("search") || "")
+
+
+watch(search, v => localStorage.setItem("search", v))
+watch(activeTab, v => localStorage.setItem("activeTab", v))
+
+
+const todoListTasks = computed(() => todoList.tasksArray)
 
 
 const filteredTasks = computed(() => {
-  if (activeTab.value === 'pending') return tasksList.value.filter(t => !t.isDone)
-  if (activeTab.value === 'completed') return tasksList.value.filter(t => t.isDone)
-  return tasksList.value
+  let list = todoListTasks.value
+
+  if (activeTab.value === "pending")
+    list = list.filter(t => !t.isDone)
+
+  if (activeTab.value === "completed")
+    list = list.filter(t => t.isDone)
+
+  if (search.value.trim() !== "")
+    list = list.filter(t =>
+      t.title.toLowerCase().includes(search.value.toLowerCase())
+    )
+
+  return list
 })
 
 
-const sortedTasks = computed(() => {
-  return [...filteredTasks.value].sort(
-    (a, b) => (b.priorityLvl - a.priorityLvl) * 1
-  )
-})
+const sortedTasks = computed(() =>
+  [...filteredTasks.value].sort((a, b) => b.priorityLvl - a.priorityLvl)
+)
 </script>
 
 
+
 <template>
-  <div class="w-[900px] h-[70%] ml-auto mr-[30px] mt-[10px] relative right-[30px]">
+  <div class="w-[900px] h-[70%] ml-auto mr-auto mt-[10px] relative right-[30px]">
 
     <button
       aria-label="All"
@@ -51,17 +69,18 @@ const sortedTasks = computed(() => {
       Completed
     </button>
 
+    <input type="text" v-model="search" placeholder="Search name.." class="ml-[265px] w-[300px]"/>
+
     <div class="bg-neutral-800 w-full h-full overflow-x-auto border rounded-[10px]">
       <div class="w-full">
         <div class="todo-container overflow-y-auto h-[470px] p-4 scrollbar-custom">
           <slot />
-            <div v-for="task in sortedTasks" :key="task.id"
-                class="flex flex-col gap-1 p-4 mb-3 rounded-lg border border-gray-300 shadow-sm bg-neutral-500">
+           <div v-for="task in sortedTasks" :key="task.id"
+              class="flex flex-col gap-1 p-4 mb-3 rounded-lg border border-gray-300 shadow-sm bg-neutral-500">
 
               <div class="flex justify-between items-center">
                 <p class="text-lg font-bold text-emerald-300">{{ task.title }}</p>
                 <p class="text-sm text-teal-300 font-semibold">{{ new Date(task.date).toLocaleDateString() }}</p>
-
               </div>
 
               <p class="text-white text-[15px] leading-snug font-semibold">
@@ -107,7 +126,7 @@ const sortedTasks = computed(() => {
               <Button 
                 variant="outline"
                 @click="todoList.createTask('Task ' + Date.now(), 'Just a test', Math.floor(Math.random() * 5) + 1, new Date())"
-                class="bg-neutral-400 hover:bg-neutral-300 cursor-pointer text-[18px]">
+                class="bg-neutral-400 hover:bg-neutral-300 cursor-pointer text-[18px] text-black">
                 Create Task
               </Button>
 
