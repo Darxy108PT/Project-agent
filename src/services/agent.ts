@@ -39,8 +39,12 @@ export class AgentService {
               type: "string",
               description: "The description of the to-do item",
             },
+            priorityLvl: {
+              type: "number",
+              description: "The priority level of the to-do item",
+            },
           },
-          required: ["title", "description"],
+          required: ["title", "description", "priorityLvl"],
         },
       },
     },
@@ -55,6 +59,23 @@ export class AgentService {
             id: {
               type: "number",
               description: "The ID of the to-do item to be marked as completed",
+            },
+          },
+          required: ["id"],
+        },
+      },
+    },
+    {
+      type: "function",
+      function: {
+        name: "RemoveTodo",
+        description: "Removes a to-do list item",
+        parameters: {
+          type: "object",
+          properties: {
+            id: {
+              type: "number",
+              description: "The ID of the to-do item to be removed",
             },
           },
           required: ["id"],
@@ -79,6 +100,20 @@ export class AgentService {
         - Do NOT make todos equal to each other
         - Use the to-do list as the source of truth for all operations
 
+        Tools you can use:
+        1. CreateTodo:
+            - Creates a to-do list item
+            - Arguments:
+                - title: string (title of the to-do item)
+                - description: string (description of the to-do item)
+        2. CompleteTodo:
+            - Updates a to-do list item as completed
+            - Arguments:
+                - id: number (ID of the to-do item to be marked as completed)
+        3. RemoveTodo:
+            - Removes a to-do list item
+            - Arguments:
+                - id: number (ID of the to-do item to be removed)
         Current to-do list (source of truth):
         ${JSON.stringify(tasksList)}
 
@@ -86,6 +121,20 @@ export class AgentService {
         - Use the ID exactly as provided
         - Use just the ID number when getting something from the to-do list
         - If the requested task does not exist, do nothing
+        - Try as much as possible to use the tools provided
+
+        Guidelines for creating a to-do item:
+        - Title should be concise and descriptive
+        - Description should provide additional details about the task
+        - Provide priority level for each task
+        - Priority level goes from 1 (lowest) to 5 (highest)
+
+        Example user requests and tool calls:
+        - User request: "I need to buy groceries"
+          Tool call: CreateTodo with title "Buy groceries", description "Buy milk, eggs, and bread" and priority level 5
+        - User request: "I have bought the groceries"
+        - User request: "I have already bought the groceries"
+          Tool call: CompleteTodo with id 1627891234567 (was the ID of the "Buy groceries" task)
     `;
 
 
@@ -126,17 +175,26 @@ export class AgentService {
                 todoList.createTask(
                     args.title,
                     args.description,
-                    1,
+                    args.priorityLvl,
                     new Date()
                 );
             }
 
             if (name === "CompleteTodo") {
-              const task = todoList.getProduct(args.id);
+              const task = todoList.getTask(args.id);
               if (task) {
                 todoList.checkTask(task);
               } else {
                 console.warn(`CompleteTodo: task with id ${args.id} not found`);
+              }
+            }
+            
+            if (name === "RemoveTodo") {
+              const task = todoList.getTask(args.id);
+              if (task) {
+                todoList.removeTask(task);
+              } else {
+                console.warn(`RemoveTodo: task with id ${args.id} not found`);
               }
             }
         }
