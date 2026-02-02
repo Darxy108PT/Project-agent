@@ -1,7 +1,6 @@
 
 import Groq from "groq-sdk";
 import { ref } from 'vue';
-import { tasksList } from '@/services/task';
 import { todoList } from '@/services/todoList';
 
 export class AgentService {
@@ -68,7 +67,43 @@ export class AgentService {
     {
       type: "function",
       function: {
-        name: "RemoveTodo",
+        name: "UpdateTodo",
+        description: "Updates the information about a to-do list item",
+        parameters: {
+          type: "object",
+          properties: {
+            id: { 
+              type: "number", 
+              description: "The ID of the to-do item to be updated" 
+            },
+            title: { 
+              type: "string", 
+              description: "The title of the to-do item" 
+            },
+            description: { 
+              type: "string", 
+              description: "The description of the to-do item" 
+            },
+            priorityLvl: { 
+              type: "number", 
+              description: "The priority level of the to-do item" 
+            },
+            isDone: { 
+              type: "boolean", 
+              description: "The property that indicates whether the task has been completed or not in the to-do list item" 
+            }
+          },
+          required: ["id"]
+        }
+      }
+    },
+    {
+      type: "function",
+      function: {
+      name: "RemoveTodo",
+      type: "function",
+      function: {
+        name: "DeleteTodo",
         description: "Removes a to-do list item",
         parameters: {
           type: "object",
@@ -115,7 +150,7 @@ export class AgentService {
             - Arguments:
                 - id: number (ID of the to-do item to be removed)
         Current to-do list (source of truth):
-        ${JSON.stringify(tasksList)}
+        ${JSON.stringify(Array.from(todoList.tasks.values()))}
 
         Important:
         - Use the ID exactly as provided
@@ -188,7 +223,23 @@ export class AgentService {
                 console.warn(`CompleteTodo: task with id ${args.id} not found`);
               }
             }
-            
+
+            if (name === "UpdateTodo") {
+              const task = todoList.getTask(args.id);
+              if (task) {
+                todoList.updateTask(
+                  task,
+                  args.title ?? task.title,
+                  args.description ?? task.description,
+                  args.priorityLvl ?? task.priorityLvl,
+                  args.isDone ?? task.isDone
+                );
+              } else {
+                console.warn(`UpdateTodo: task with id ${args.id} not found`);
+              }
+            }
+
+
             if (name === "RemoveTodo") {
               const task = todoList.getTask(args.id);
               if (task) {
