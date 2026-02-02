@@ -1,12 +1,12 @@
 import { Task, tasksList } from "./task.ts"
-import { reactive, shallowReactive } from "vue"
+import { reactive } from "vue"
 
 export class ToDoList {
     tasks: Map<any, any>
     LSkey: string
 
     constructor() {
-        this.tasks = shallowReactive(new Map<number, Task>())
+        this.tasks = reactive(new Map<number, Task>())
         this.LSkey = 'tasks'
         this.loadFromLocalStorage()
     }

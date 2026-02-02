@@ -97,11 +97,6 @@ const sortedTasks = computed(() =>
                   {{ task.priorityLvl }} Priority
                 </span>
 
-                <button @click="todoList.removeTask(task)" 
-                class="bg-red-700 hover:bg-red-600 w-[100px] h-[30px] mt-[5px] cursor-pointer rounded-[10px] border">
-                  Remove
-                </button>
-
                 <span class="text-sm font-bold"
                   :class="task.isDone ? 'text-green-300' : 'text-gray-300'">
                   {{ task.isDone ? 'Completed' : 'Pending' }}

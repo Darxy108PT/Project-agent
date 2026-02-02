@@ -100,9 +100,6 @@ export class AgentService {
     {
       type: "function",
       function: {
-      name: "RemoveTodo",
-      type: "function",
-      function: {
         name: "DeleteTodo",
         description: "Removes a to-do list item",
         parameters: {
@@ -145,7 +142,7 @@ export class AgentService {
             - Updates a to-do list item as completed
             - Arguments:
                 - id: number (ID of the to-do item to be marked as completed)
-        3. RemoveTodo:
+        3. DeleteTodo:
             - Removes a to-do list item
             - Arguments:
                 - id: number (ID of the to-do item to be removed)
@@ -240,12 +237,12 @@ export class AgentService {
             }
 
 
-            if (name === "RemoveTodo") {
+            if (name === "DeleteTodo") {
               const task = todoList.getTask(args.id);
               if (task) {
                 todoList.removeTask(task);
               } else {
-                console.warn(`RemoveTodo: task with id ${args.id} not found`);
+                console.warn(`DeleteTodo: task with id ${args.id} not found`);
               }
             }
         }
