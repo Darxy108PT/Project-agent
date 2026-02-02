@@ -42,6 +42,7 @@ data.apiKey = localStorage.getItem('API Key') || ''
       <SheetDescription class="text-white">
         <p> Put here your API Key to start using Groq. You can change it when you want by clicking the button.</p>
         <p class="pt-[15px]"> If it's your first time, <b> save it before you close !!! </b></p>
+        <p class="pt-[15px] text-lg"><b> Not Forget: When you update the API Key Refresh the page after saving it!! </b></p>
       </SheetDescription>
     </SheetHeader>
 
