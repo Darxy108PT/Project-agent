@@ -116,7 +116,8 @@ export class AgentService {
       }
     ];
 
-    systemPrompt = `
+    getSystemPrompt() { 
+      return `
         You are an AI decision engine.
 
         Your job:
@@ -175,7 +176,7 @@ export class AgentService {
         - User request: "I have bought the groceries"
         - User request: "I have already bought the groceries"
           Tool call: CompleteTodo with id 1627891234567 (was the ID of the "Buy groceries" task)
-    `;
+    `};
 
 
     main = async (prompt: string) => {
@@ -193,7 +194,7 @@ export class AgentService {
     getGroqChatCompletion = async (prompt: string) => {
         const response = await this.groq.chat.completions.create({
             messages: [
-                { role: "system", content: this.systemPrompt },
+                { role: "system", content: this.getSystemPrompt() },
                 { role: "user", content: prompt }
             ],
             model: this.Model || "openai/gpt-oss-120b",
@@ -201,6 +202,8 @@ export class AgentService {
             tool_choice: "auto",
         });
         const message = response.choices[0].message;
+        console.log('RAW RESPONSE:', JSON.stringify(response, null, 2));
+        console.log('MESSAGE:', JSON.stringify(message, null, 2));
 
         if (!message.tool_calls) {
             console.log("No tool call needed");
