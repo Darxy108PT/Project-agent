@@ -1,7 +1,5 @@
 <script setup lang="ts">
-
 import { todoList } from '@/services/todoList';
-import { Button } from '@/components/ui/button'
 import { computed, ref, watch } from 'vue'
 
 const activeTab = ref(localStorage.getItem("activeTab") || "all")
@@ -80,7 +78,7 @@ const sortedTasks = computed(() =>
 
               <div class="flex justify-between items-center">
                 <p class="text-lg font-bold text-emerald-300">{{ task.title }}</p>
-                <p class="text-sm text-teal-300 font-semibold">{{ new Date(task.date).toLocaleDateString() }}</p>
+                <p class="text-sm text-tal-300 font-semibold">{{ new Date(task.date).toLocaleDateString() }}</p>
               </div>
 
               <p class="text-white text-[15px] leading-snug font-semibold">
@@ -99,19 +97,9 @@ const sortedTasks = computed(() =>
                   {{ task.priorityLvl }} Priority
                 </span>
 
-                <button class="bg-green-800 pt-[5px] pb-[5px] pr-[10px] pl-[10px] rounded-[12px] border hover:bg-green-600 cursor-pointer" 
-                @click="todoList.checkTask(task)">
-                  Check Task
-                </button>
-                
-                <button class="bg-cyan-800 pt-[5px] pb-[5px] pr-[10px] pl-[10px] rounded-[12px] border hover:bg-cyan-600 cursor-pointer" 
-                @click="todoList.updateTask(task, 'Task ' + task.id + ' V2', 'Test for the update method', Math.floor(Math.random() * 5) + 1, task.isDone)">
-                  Update Task
-                </button>
-                
-                <button class="bg-red-800 pt-[5px] pb-[5px] pr-[10px] pl-[10px] rounded-[12px] border hover:bg-red-600 cursor-pointer" 
-                @click="todoList.removeTask(task)">
-                  Remove Task
+                <button @click="todoList.removeTask(task)" 
+                class="bg-red-700 hover:bg-red-600 w-[100px] h-[30px] mt-[5px] cursor-pointer rounded-[10px] border">
+                  Remove
                 </button>
 
                 <span class="text-sm font-bold"
@@ -119,17 +107,6 @@ const sortedTasks = computed(() =>
                   {{ task.isDone ? 'Completed' : 'Pending' }}
                 </span>
               </div>
-            </div>
-
-            <div class="fixed top-18 right-4 grid grid-rows-5 gap-[20px]">
-
-              <Button 
-                variant="outline"
-                @click="todoList.createTask('Task ' + Date.now(), 'Just a test', Math.floor(Math.random() * 5) + 1, new Date())"
-                class="bg-neutral-400 hover:bg-neutral-300 cursor-pointer text-[18px] text-black">
-                Create Task
-              </Button>
-
             </div>
         </div>
       </div>

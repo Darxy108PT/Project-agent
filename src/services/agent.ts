@@ -1,7 +1,6 @@
 
 import Groq from "groq-sdk";
 import { ref } from 'vue';
-import { tasksList } from '@/services/task';
 import { todoList } from '@/services/todoList';
 
 export class AgentService {
@@ -60,7 +59,57 @@ export class AgentService {
           required: ["id"],
         },
       },
-    }
+    },
+    {
+      type: "function",
+      function: {
+        name: "UpdateTodo",
+        description: "Updates the information about a to-do list item",
+        parameters: {
+          type: "object",
+          properties: {
+            id: { 
+              type: "number", 
+              description: "The ID of the to-do item to be updated" 
+            },
+            title: { 
+              type: "string", 
+              description: "The title of the to-do item" 
+            },
+            description: { 
+              type: "string", 
+              description: "The description of the to-do item" 
+            },
+            priorityLvl: { 
+              type: "number", 
+              description: "The priority level of the to-do item" 
+            },
+            isDone: { 
+              type: "boolean", 
+              description: "The property that indicates whether the task has been completed or not in the to-do list item" 
+            }
+          },
+          required: ["id"]
+        }
+      }
+    },
+    {
+      type: "function",
+      function: {
+        name: "DeleteTodo",
+        description: "Removes a to-do list item",
+        parameters: {
+          type: "object",
+          properties: {
+            id: {
+              type: "number",
+              description: "The ID of the to-do item to be marked as completed",
+            },
+          },
+          required: ["id"],
+        },
+      },
+    },
     ];
 
     systemPrompt = `
@@ -80,7 +129,7 @@ export class AgentService {
         - Use the to-do list as the source of truth for all operations
 
         Current to-do list (source of truth):
-        ${JSON.stringify(tasksList)}
+        ${JSON.stringify(Array.from(todoList.tasks.values()))}
 
         Important:
         - Use the ID exactly as provided
@@ -132,11 +181,36 @@ export class AgentService {
             }
 
             if (name === "CompleteTodo") {
-              const task = todoList.getProduct(args.id);
+              const task = todoList.getTask(args.id);
               if (task) {
                 todoList.checkTask(task);
               } else {
                 console.warn(`CompleteTodo: task with id ${args.id} not found`);
+              }
+            }
+
+            if (name === "UpdateTodo") {
+              const task = todoList.getTask(args.id);
+              if (task) {
+                todoList.updateTask(
+                  task,
+                  args.title ?? task.title,
+                  args.description ?? task.description,
+                  args.priorityLvl ?? task.priorityLvl,
+                  args.isDone ?? task.isDone
+                );
+              } else {
+                console.warn(`UpdateTodo: task with id ${args.id} not found`);
+              }
+            }
+
+
+            if (name === "DeleteTodo") {
+              const task = todoList.getTask(args.id);
+              if (task) {
+                todoList.removeTask(task);
+              } else {
+                console.warn(`DeleteTodo: task with id ${args.id} not found`);
               }
             }
         }
