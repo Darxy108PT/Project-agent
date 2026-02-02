@@ -67,7 +67,7 @@ const sortedTasks = computed(() =>
       Completed
     </button>
 
-    <input type="text" v-model="search" placeholder="Search name.." class="ml-[265px] w-[300px]"/>
+    <input type="text" v-model="search" placeholder="Search name.." class="ml-[265px] w-[300px] pl-[5px]"/>
 
     <div class="bg-neutral-800 w-full h-full overflow-x-auto border rounded-[10px]">
       <div class="w-full">
