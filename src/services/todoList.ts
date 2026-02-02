@@ -48,7 +48,7 @@ export class ToDoList {
         console.log(this)
     }
 
-    getProduct(id: number){
+    getTask(id: number){
         // Map keys are task IDs; values are Task objects. Return the Task value directly.
         return this.tasks.get(id)
     }
