@@ -202,8 +202,6 @@ export class AgentService {
             tool_choice: "auto",
         });
         const message = response.choices[0].message;
-        console.log('RAW RESPONSE:', JSON.stringify(response, null, 2));
-        console.log('MESSAGE:', JSON.stringify(message, null, 2));
 
         if (!message.tool_calls) {
             console.log("No tool call needed");
